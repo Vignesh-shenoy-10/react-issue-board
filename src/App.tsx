@@ -1,15 +1,17 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BoardPage from './pages/BoardPage';
-import { IssueDetailPage } from './pages/IssueDetailPage';
+import IssueDetailPage from './pages/IssueDetailPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { Navigation } from './components/Navigation';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { IssuesProvider } from "./context/IssuesContext";
 import "./globals.css"
 
 export const App = () => {
   return (
+     <IssuesProvider>
     <Router>
       <Navigation />
       <Routes>
@@ -28,5 +30,6 @@ export const App = () => {
         theme="dark"
       />
     </Router>
+    </IssuesProvider>
   );
 };

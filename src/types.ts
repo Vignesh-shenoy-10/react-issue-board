@@ -10,4 +10,5 @@ export interface Issue {
   createdAt: string; 
   assignee: string;
   tags: string[];
+  userDefinedRank: number;
 }

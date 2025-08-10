@@ -5,7 +5,7 @@ import IssueBoard from "../components/IssueBoard/IssueBoard";
 const BoardPage: React.FC = () => {
   return (
     <div>
-      <h1>Issue Tracker</h1>
+      <h3>Issue Tracker</h3>
       <IssueBoard />
     </div>
   );

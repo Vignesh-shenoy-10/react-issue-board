@@ -1,72 +1,99 @@
 .issue-card {
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(9, 30, 66, 0.13);
   padding: 16px;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   display: flex;
   flex-direction: column;
+  transition: all 0.2s ease;
   cursor: grab;
-  transition: box-shadow 0.2s ease, transform 0.1s ease;
 }
 
-.issue-card:active {
-  cursor: grabbing;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+.issue-card:hover {
+  box-shadow: 0 4px 14px rgba(76, 154, 255, 0.18);
+  transform: translateY(-1px);
+}
+
+.issue-card.dragging {
+  background: #fffbe6;
+  box-shadow: 0 4px 14px rgba(76, 154, 255, 0.35);
   transform: scale(1.02);
-}
-
-.issue-title {
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #172b4d;
-}
-
-.issue-description {
-  font-size: 0.9rem;
-  color: #555;
-  margin-bottom: 12px;
-  white-space: pre-wrap; /* preserve line breaks */
+  cursor: grabbing;
 }
 
 .priority-badge {
-  align-self: flex-start;
-  padding: 4px 10px;
+  display: inline-block;
+  padding: 3px 10px;
   border-radius: 12px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: white;
-  margin-bottom: 10px;
   text-transform: capitalize;
-  user-select: none;
+  color: #fff;
+  width: fit-content;
 }
 
-.priority-low {
-  background-color: #66bb6a; /* green */
+
+.priority-low { background: #66bb6a; }
+.priority-medium { background: #ffc107; color: #222; }
+.priority-high { background: #e53935; }
+
+
+.issue-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #172b4d;
+  margin: 6px 0;
 }
 
-.priority-medium {
-  background-color: #fbc02d; /* yellow */
-  color: #222;
-}
-
-.priority-high {
-  background-color: #e53935; /* red */
-}
-
-.card-actions {
-  margin-top: auto;
+.tag-list {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+.tag-pill {
+  padding: 2px 9px;
+  border-radius: 12px;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #fff;
+}
+.tag-bug { background: #e53935; }
+.tag-frontend { background: #29b6f6; }
+.tag-backend { background: #8e24aa; }
+.tag-api { background: #43a047; }
+.tag-ui { background: #ff9800; }
+
+.issue-meta {
+  display: flex;
+  align-items: center;
   gap: 8px;
+  font-size: 0.8rem;
+  color: #6b778c;
+  margin-top: auto;
 }
 
-/* Keep the Trello-style move buttons from earlier */
-.move-btn.trello-btn {
+.assignee-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #dfe1e6;
+  color: #172b4d;
+  font-size: 0.85rem;
+  font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 8px;
+}
+
+.move-btn.trello-btn {
   background: transparent;
   border: none;
   border-radius: 3px;
@@ -76,22 +103,31 @@
   cursor: pointer;
   transition: all 0.15s ease;
 }
-
 .move-btn.trello-btn:hover:not(:disabled) {
-  background: rgba(9, 30, 66, 0.08);
+  background: rgba(9,30,66,0.08);
   color: #172b4d;
 }
-
 .move-btn.trello-btn:active:not(:disabled) {
-  background: rgba(9, 30, 66, 0.13);
+  background: rgba(9,30,66,0.13);
 }
-
 .move-btn.trello-btn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
 }
-
 .move-btn.trello-btn svg {
   width: 16px;
   height: 16px;
+}
+.assignee-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b778c;
+  font-size: 0.85rem;
+  user-select: none;
+}
+
+.assignee-name {
+  font-weight: 500;
+  color: #172b4d;
 }
