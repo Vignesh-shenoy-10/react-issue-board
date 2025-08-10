@@ -1,0 +1,97 @@
+.issue-card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  cursor: grab;
+  transition: box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+.issue-card:active {
+  cursor: grabbing;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transform: scale(1.02);
+}
+
+.issue-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #172b4d;
+}
+
+.issue-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 12px;
+  white-space: pre-wrap; /* preserve line breaks */
+}
+
+.priority-badge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  user-select: none;
+}
+
+.priority-low {
+  background-color: #66bb6a; /* green */
+}
+
+.priority-medium {
+  background-color: #fbc02d; /* yellow */
+  color: #222;
+}
+
+.priority-high {
+  background-color: #e53935; /* red */
+}
+
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* Keep the Trello-style move buttons from earlier */
+.move-btn.trello-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+  padding: 4px 6px;
+  color: #6b778c;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.move-btn.trello-btn:hover:not(:disabled) {
+  background: rgba(9, 30, 66, 0.08);
+  color: #172b4d;
+}
+
+.move-btn.trello-btn:active:not(:disabled) {
+  background: rgba(9, 30, 66, 0.13);
+}
+
+.move-btn.trello-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.move-btn.trello-btn svg {
+  width: 16px;
+  height: 16px;
+}
