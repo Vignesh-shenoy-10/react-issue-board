@@ -1,7 +1,7 @@
 import React from "react";
 import { Droppable } from "@hello-pangea/dnd";
-import { Issue, IssueStatus } from "../types";
-import IssueCard from "./IssueCard/IssueCard";
+import { Issue, IssueStatus } from "../../types";
+import IssueCard from "../IssueCard/IssueCard";
 
 interface IssueColumnProps {
   title: string;

@@ -1,44 +1,129 @@
-import React, { createContext, useState, useContext } from "react";
-import { Issue } from "../types";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useRef,
+  useEffect,
+} from "react";
+import { toast, Slide } from "react-toastify";
 import rawIssuesData from "../data/issues.json";
-import { IssuePriority, IssueStatus } from "../types";
+import { Issue, IssuePriority, IssueStatus } from "../types";
 
 interface IssuesContextType {
   issues: Issue[];
   setIssues: React.Dispatch<React.SetStateAction<Issue[]>>;
   updateIssue: (id: string, updatedFields: Partial<Issue>) => void;
+  showUndoToast: (message: string, prevIssues: Issue[]) => void;
+
+  recentlyAccessed: string[];
+  addToRecentlyAccessed: (issueId: string) => void;
 }
 
 const IssuesContext = createContext<IssuesContextType | undefined>(undefined);
 
-export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [issues, setIssues] = useState<Issue[]>(() => {
-    return rawIssuesData.map(issue => ({
+    return rawIssuesData.map((issue) => ({
       ...issue,
       status: issue.status as IssueStatus,
       priority: issue.priority as IssuePriority,
     }));
   });
 
+  const [recentlyAccessed, setRecentlyAccessed] = useState<string[]>([]);
+  const undoTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("recentlyAccessed");
+    if (stored) {
+      try {
+        setRecentlyAccessed(JSON.parse(stored));
+      } catch (err) {
+        console.error("Error parsing recentlyAccessed from localStorage:", err);
+      }
+    }
+  }, []);
+
   const updateIssue = (id: string, updatedFields: Partial<Issue>) => {
-    setIssues(prev =>
-      prev.map(issue =>
+    setIssues((prev) =>
+      prev.map((issue) =>
         issue.id === id ? { ...issue, ...updatedFields } : issue
       )
     );
   };
 
+  const undoMoveDirect = (prevIssues: Issue[]) => {
+    setIssues(prevIssues);
+    if (undoTimeout.current) clearTimeout(undoTimeout.current);
+    toast.dismiss();
+    toast.info("Action undone.", { autoClose: 2000 });
+  };
+
+  const showUndoToast = (message: string, prevIssues: Issue[]) => {
+    toast.dismiss();
+    toast(
+      ({ closeToast }) => (
+        <div className="undo-toast">
+          <span className="toast-icon-circle">✔</span>
+          <span className="toast-msg">{message}</span>
+          <button
+            className="undo-btn"
+            onClick={() => {
+              undoMoveDirect(prevIssues);
+              closeToast?.();
+            }}
+          >
+            ⤺ Undo
+          </button>
+        </div>
+      ),
+      {
+        autoClose: 5000,
+        closeButton: false,
+        position: "bottom-right",
+        transition: Slide,
+        style: {
+          background: "none",
+          boxShadow: "none",
+          padding: 0,
+          minHeight: 0,
+          border: "none",
+        },
+      }
+    );
+  };
+
+  const addToRecentlyAccessed = (issueId: string) => {
+    setRecentlyAccessed((prev) => {
+      const updated = [issueId, ...prev.filter((id) => id !== issueId)].slice(
+        0,
+        5
+      );
+      localStorage.setItem("recentlyAccessed", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
-    <IssuesContext.Provider value={{ issues, setIssues, updateIssue }}>
+    <IssuesContext.Provider
+      value={{
+        issues,
+        setIssues,
+        updateIssue,
+        showUndoToast,
+        recentlyAccessed,
+        addToRecentlyAccessed,
+      }}
+    >
       {children}
     </IssuesContext.Provider>
   );
 };
 
-export const useIssues = (): IssuesContextType => {
+export const useIssues = () => {
   const ctx = useContext(IssuesContext);
-  if (!ctx) {
-    throw new Error("useIssues must be used within an IssuesProvider");
-  }
+  if (!ctx) throw new Error("useIssues must be used within an IssuesProvider");
   return ctx;
 };

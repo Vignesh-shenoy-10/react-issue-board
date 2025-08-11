@@ -34,7 +34,6 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
             to={`/issue/${issue.id}`}
             className="issue-card-content"
             tabIndex={0}
-            // Prevents focus on the button inside breaking the card link
             style={{ textDecoration: "none", color: "inherit", flex: 1 }}
           >
             <div className="card-header">
@@ -46,8 +45,11 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
 
             {issue.tags?.length > 0 && (
               <div className="tag-list">
-                {issue.tags.map(tag => (
-                  <span key={tag} className={`tag-pill tag-${tag.toLowerCase()}`}>
+                {issue.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className={`tag-pill tag-${tag.toLowerCase()}`}
+                  >
                     {tag}
                   </span>
                 ))}
@@ -56,7 +58,9 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
 
             <div className="issue-meta">
               <div className="assignee-group" title={issue.assignee}>
-                <span className="assignee-avatar">{getInitials(issue.assignee)}</span>
+                <span className="assignee-avatar">
+                  {getInitials(issue.assignee)}
+                </span>
                 <span className="assignee-name">{issue.assignee}</span>
               </div>
               <span className="meta-label">Severity: {issue.severity}</span>
@@ -69,7 +73,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
             <div className="card-actions">
               <button
                 className="move-btn trello-btn"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onMove(issue.id, "left");
                 }}
@@ -80,7 +84,7 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
               </button>
               <button
                 className="move-btn trello-btn"
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   onMove(issue.id, "right");
                 }}

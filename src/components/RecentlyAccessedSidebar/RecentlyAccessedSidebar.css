@@ -1,0 +1,70 @@
+.recent-sidebar {
+  position: relative;
+  background: #fafafa;
+  border-left: 1px solid #ddd;
+  transition: width 0.3s ease;
+}
+
+.recent-sidebar.open {
+  width: 250px;
+  padding: 16px;
+}
+
+.recent-sidebar.collapsed {
+  width: 30px;
+  padding: 16px 4px;
+}
+
+.toggle-btn.always-visible {
+  position: absolute;
+  top: 8px;
+  left: -24px;
+  background: #fafafa;
+  border: 1px solid #ddd;
+  border-radius: 4px 0 0 4px;
+  cursor: pointer;
+  padding: 4px 6px;
+  font-size: 1rem;
+}
+
+.recent-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-title {
+  margin-bottom: 10px;
+}
+
+.recent-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.recent-item {
+  margin-bottom: 8px;
+}
+
+.recent-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.recent-link:hover {
+  text-decoration: underline;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-backlog { background-color: gray; }
+.status-inprogress { background-color: orange; }
+.status-done { background-color: green; }

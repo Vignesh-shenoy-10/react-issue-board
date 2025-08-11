@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Issue, IssueStatus } from "../../types";
-import IssueColumn from "../IssueColumn";
+import IssueColumn from "../IssueColumn/IssueColumn";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { toast, Slide } from "react-toastify";
 import "./IssueBoard.css";

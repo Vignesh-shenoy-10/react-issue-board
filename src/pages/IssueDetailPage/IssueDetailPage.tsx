@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useIssues } from "../../context/IssuesContext";
 import { IssueStatus } from "../../types";
@@ -8,9 +8,15 @@ import "./IssueDetailPage.css";
 const IssueDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { issues, updateIssue } = useIssues();
+  const { issues, updateIssue, addToRecentlyAccessed } = useIssues();
 
   const issue = issues.find((i) => i.id === id);
+
+  useEffect(() => {
+    if (id) {
+      addToRecentlyAccessed(id);
+    }
+  }, [id, addToRecentlyAccessed]);
 
   if (!issue) {
     return <div className="issue-not-found">Issue not found.</div>;
@@ -20,8 +26,6 @@ const IssueDetailPage: React.FC = () => {
     if (issue.status === "Done") return;
 
     updateIssue(issue.id, { status: "Done" as IssueStatus });
-
-    // Reuse the toast design
     toast.dismiss();
     toast(
       ({ closeToast }) => (
@@ -33,7 +37,7 @@ const IssueDetailPage: React.FC = () => {
           <button
             className="undo-btn"
             onClick={() => {
-              updateIssue(issue.id, { status: issue.status }); // revert to old status
+              updateIssue(issue.id, { status: issue.status });
               closeToast?.();
             }}
           >
@@ -56,7 +60,7 @@ const IssueDetailPage: React.FC = () => {
       }
     );
 
-    navigate("/"); // go back to board
+    navigate("/", { replace: true });
   };
 
   return (
