@@ -2,21 +2,25 @@ import React, {
   createContext,
   useContext,
   useState,
-  useRef,
   useEffect,
+  useRef,
 } from "react";
 import { toast, Slide } from "react-toastify";
 import rawIssuesData from "../data/issues.json";
 import { Issue, IssuePriority, IssueStatus } from "../types";
+import { mockFetchIssues } from "../utils/api";
 
 interface IssuesContextType {
   issues: Issue[];
   setIssues: React.Dispatch<React.SetStateAction<Issue[]>>;
   updateIssue: (id: string, updatedFields: Partial<Issue>) => void;
   showUndoToast: (message: string, prevIssues: Issue[]) => void;
-
   recentlyAccessed: string[];
   addToRecentlyAccessed: (issueId: string) => void;
+  lastSyncTime: Date | null;
+  isSyncing: boolean;
+  pollingIntervalMs: number;
+  setPollingIntervalMs: (ms: number) => void;
 }
 
 const IssuesContext = createContext<IssuesContextType | undefined>(undefined);
@@ -33,6 +37,10 @@ export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
   });
 
   const [recentlyAccessed, setRecentlyAccessed] = useState<string[]>([]);
+  const [lastSyncTime, setLastSyncTime] = useState<Date | null>(null);
+  const [pollingIntervalMs, setPollingIntervalMs] = useState<number>(10000);
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+
   const undoTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -41,10 +49,34 @@ export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
       try {
         setRecentlyAccessed(JSON.parse(stored));
       } catch (err) {
-        console.error("Error parsing recentlyAccessed from localStorage:", err);
+        console.error("Error parsing recentlyAccessed", err);
       }
     }
   }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchAndUpdate = async () => {
+      setIsSyncing(true);
+      try {
+        const data = await mockFetchIssues();
+        if (!isMounted) return;
+        setIssues(data as Issue[]);
+        setLastSyncTime(new Date());
+      } catch (err) {
+        console.error("Polling fetch failed", err);
+      }
+      setIsSyncing(false);
+    };
+    fetchAndUpdate();
+    const intervalId = setInterval(fetchAndUpdate, pollingIntervalMs);
+
+    return () => {
+      isMounted = false;
+      clearInterval(intervalId);
+    };
+  }, [pollingIntervalMs]);
 
   const updateIssue = (id: string, updatedFields: Partial<Issue>) => {
     setIssues((prev) =>
@@ -55,7 +87,7 @@ export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const undoMoveDirect = (prevIssues: Issue[]) => {
-    setIssues(prevIssues);
+    setIssues(JSON.parse(JSON.stringify(prevIssues)));
     if (undoTimeout.current) clearTimeout(undoTimeout.current);
     toast.dismiss();
     toast.info("Action undone.", { autoClose: 2000 });
@@ -115,6 +147,10 @@ export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
         showUndoToast,
         recentlyAccessed,
         addToRecentlyAccessed,
+        lastSyncTime,
+        isSyncing,
+        pollingIntervalMs,
+        setPollingIntervalMs,
       }}
     >
       {children}
@@ -124,6 +160,6 @@ export const IssuesProvider: React.FC<{ children: React.ReactNode }> = ({
 
 export const useIssues = () => {
   const ctx = useContext(IssuesContext);
-  if (!ctx) throw new Error("useIssues must be used within an IssuesProvider");
+  if (!ctx) throw new Error("useIssues must be used within IssuesProvider");
   return ctx;
 };

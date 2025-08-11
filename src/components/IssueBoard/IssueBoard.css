@@ -149,3 +149,65 @@
   color: #97a0af;
   font-size: 0.9rem;
 }
+
+.live-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #24b47e;
+  display: inline-block;
+  margin-right: 4px;
+}
+.live-dot.live-anim {
+  background: #276ef1;
+  animation: pulse 1s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 #276ef144; }
+  70% { box-shadow: 0 0 0 8px #276ef100; }
+  100% { box-shadow: 0 0 0 0 #276ef100; }
+}
+
+body.dark-mode .board {
+  background: #121217 !important;
+}
+
+body.dark-mode .controls-bar {
+  background: #18181b !important;
+  border-radius: 7px;
+}
+
+body.dark-mode .search-bar,
+body.dark-mode .filter-dropdown {
+  background-color: #202125 !important;
+  color: #f0f0f0 !important;
+  border-color: #2c2c2c !important;
+}
+
+body.dark-mode .search-bar:focus,
+body.dark-mode .filter-dropdown:focus {
+  border-color: #4c9aff !important;
+  box-shadow: 0 0 0 2px rgba(76,154,255,0.4) !important;
+}
+
+body.dark-mode .input-icon {
+  color: #aaa !important;
+}
+
+body.dark-mode .undo-toast {
+  background: #292929 !important;
+  color: #fafad2 !important;
+  border-left: 4px solid #ffd54f !important;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.6) !important;
+}
+
+body.dark-mode .undo-btn {
+  background: #5f4b17 !important;
+  color: #ffd54f !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .undo-btn:hover {
+  background: #7b5c1a !important;
+}
+

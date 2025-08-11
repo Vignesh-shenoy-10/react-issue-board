@@ -1,0 +1,16 @@
+body.dark-mode .issue-column {
+  background: #18181e !important;
+  color: #ececec !important;
+  border: 1px solid #23232c !important;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-mode .issue-column h2,
+body.dark-mode .issue-column h3,
+body.dark-mode .issue-column .column-title {
+  color: #111 !important;
+}
+
+body.dark-mode .issue-column * {
+  color: #000 !important;
+}

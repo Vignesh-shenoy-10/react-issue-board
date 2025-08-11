@@ -2,17 +2,25 @@ import React from "react";
 import { Droppable } from "@hello-pangea/dnd";
 import { Issue, IssueStatus } from "../../types";
 import IssueCard from "../IssueCard/IssueCard";
+import "./IssueColumn.css";
 
 interface IssueColumnProps {
   title: string;
   status: IssueStatus;
   issues: Issue[];
-  onMove: (id: string, dir: "left" | "right") => void;
+  onMove?: (id: string, dir: "left" | "right") => void;
+  isDragDisabled?: boolean;
 }
 
-const IssueColumn: React.FC<IssueColumnProps> = ({ title, status, issues, onMove }) => {
+const IssueColumn: React.FC<IssueColumnProps> = ({
+  title,
+  status,
+  issues,
+  onMove,
+  isDragDisabled = false,
+}) => {
   return (
-    <Droppable droppableId={status}>
+    <Droppable droppableId={status} isDropDisabled={isDragDisabled}>
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -26,16 +34,20 @@ const IssueColumn: React.FC<IssueColumnProps> = ({ title, status, issues, onMove
             minHeight: "400px",
             display: "flex",
             flexDirection: "column",
-            transition: "background 0.24s"
+            transition: "background 0.24s",
           }}
         >
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "10px"
-          }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              marginBottom: "10px",
+            }}
+          >
             <h3 style={{ margin: 0 }}>{title}</h3>
-            <span style={{ color: "#555", fontSize: "0.85rem" }}>{issues.length}</span>
+            <span style={{ color: "#555", fontSize: "0.85rem" }}>
+              {issues.length}
+            </span>
           </div>
 
           <div style={{ flex: 1 }}>
@@ -46,10 +58,17 @@ const IssueColumn: React.FC<IssueColumnProps> = ({ title, status, issues, onMove
                   issue={issue}
                   index={index}
                   onMove={onMove}
+                  isDragDisabled={isDragDisabled}
                 />
               ))
             ) : (
-              <p style={{ textAlign: "center", color: "#888", fontSize: "0.9rem" }}>
+              <p
+                style={{
+                  textAlign: "center",
+                  color: "#888",
+                  fontSize: "0.9rem",
+                }}
+              >
                 No issues in {title}
               </p>
             )}

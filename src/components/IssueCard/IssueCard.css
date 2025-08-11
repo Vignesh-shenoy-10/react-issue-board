@@ -22,7 +22,6 @@
   outline: 2px solid white;
 }
 
-
 .issue-card.dragging {
   background: #fffbe6;
   box-shadow: 0 4px 14px rgba(76, 154, 255, 0.35);
@@ -41,11 +40,16 @@
   width: fit-content;
 }
 
-
-.priority-low { background: #66bb6a; }
-.priority-medium { background: #ffc107; color: #222; }
-.priority-high { background: #e53935; }
-
+.priority-low {
+  background: #66bb6a;
+}
+.priority-medium {
+  background: #ffc107;
+  color: #222;
+}
+.priority-high {
+  background: #e53935;
+}
 
 .issue-title {
   font-size: 1.05rem;
@@ -67,11 +71,21 @@
   font-weight: 500;
   color: #fff;
 }
-.tag-bug { background: #e53935; }
-.tag-frontend { background: #29b6f6; }
-.tag-backend { background: #8e24aa; }
-.tag-api { background: #43a047; }
-.tag-ui { background: #ff9800; }
+.tag-bug {
+  background: #e53935;
+}
+.tag-frontend {
+  background: #29b6f6;
+}
+.tag-backend {
+  background: #8e24aa;
+}
+.tag-api {
+  background: #43a047;
+}
+.tag-ui {
+  background: #ff9800;
+}
 
 .issue-meta {
   display: flex;
@@ -112,11 +126,11 @@
   transition: all 0.15s ease;
 }
 .move-btn.trello-btn:hover:not(:disabled) {
-  background: rgba(9,30,66,0.08);
+  background: rgba(9, 30, 66, 0.08);
   color: #172b4d;
 }
 .move-btn.trello-btn:active:not(:disabled) {
-  background: rgba(9,30,66,0.13);
+  background: rgba(9, 30, 66, 0.13);
 }
 .move-btn.trello-btn:disabled {
   opacity: 0.4;
@@ -138,4 +152,55 @@
 .assignee-name {
   font-weight: 500;
   color: #172b4d;
+}
+
+.issue-card.disabled {
+  opacity: 0.6;
+}
+
+.issue-card.disabled .move-btn {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+
+body.dark-mode .issue-card {
+  background: #1e1e1e !important;
+  color: #eeeeee !important;
+  box-shadow: 0 1px 6px #111 !important;
+}
+
+body.dark-mode .issue-card:hover,
+body.dark-mode .issue-card-content:hover {
+  background: #242429 !important;
+}
+
+body.dark-mode .issue-title {
+  color: #fafafa !important;
+}
+
+body.dark-mode .issue-meta {
+  color: #bbb !important;
+}
+
+body.dark-mode .assignee-avatar {
+  background: #333 !important;
+  color: #fff !important;
+}
+
+body.dark-mode .assignee-name {
+  color: #ddd !important;
+}
+
+body.dark-mode .move-btn.trello-btn {
+  color: #bbb !important;
+}
+
+body.dark-mode .move-btn.trello-btn:hover:not(:disabled) {
+  background: rgba(255,255,255,0.1) !important;
+  color: #fff !important;
+}
+
+body.dark-mode .move-btn.trello-btn:active:not(:disabled) {
+  background: rgba(255,255,255,0.15) !important;
 }

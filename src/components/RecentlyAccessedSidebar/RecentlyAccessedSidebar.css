@@ -65,6 +65,44 @@
   border-radius: 50%;
 }
 
-.status-backlog { background-color: gray; }
-.status-inprogress { background-color: orange; }
-.status-done { background-color: green; }
+.status-backlog {
+  background-color: gray;
+}
+.status-inprogress {
+  background-color: orange;
+}
+.status-done {
+  background-color: green;
+}
+
+body.dark-mode .recent-sidebar {
+  background: #18181b !important;
+  border-left: 1px solid #303030 !important;
+}
+
+body.dark-mode .toggle-btn.always-visible {
+  background: #1e1e1e !important;
+  border: 1px solid #333 !important;
+  color: #e0e0e0 !important;
+}
+
+body.dark-mode .recent-link {
+  color: #ccc !important;
+}
+
+body.dark-mode .recent-link:hover {
+  color: #fff !important;
+}
+
+body.dark-mode .status-backlog {
+  background-color: #8a8a8a !important;
+}
+body.dark-mode .status-inprogress {
+  background-color: #ffb300 !important;
+}
+body-dark-mode .status-done {
+  background-color: #32cd32 !important;
+}
+body.dark-mode .recent-sidebar .recent-title {
+  color: #fff !important;
+}

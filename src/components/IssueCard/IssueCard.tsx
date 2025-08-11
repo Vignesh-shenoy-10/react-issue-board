@@ -8,33 +8,58 @@ import "./IssueCard.css";
 interface IssueCardProps {
   issue: Issue;
   index: number;
-  onMove: (id: string, dir: "left" | "right") => void;
+  onMove?: (id: string, dir: "left" | "right") => void;
+  isDragDisabled?: boolean;
 }
 
 const columns: IssueStatus[] = ["Backlog", "In Progress", "Done"];
+const normalizeStatus = (status: string) => status.trim().toLowerCase();
 
 const getInitials = (name: string) => name?.charAt(0).toUpperCase() || "?";
 
-const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
-  const currentIndex = columns.indexOf(issue.status);
+const IssueCard: React.FC<IssueCardProps> = ({
+  issue,
+  index,
+  onMove,
+  isDragDisabled = false,
+}) => {
+  const currentIndex = columns.findIndex(
+    (col) => normalizeStatus(col) === normalizeStatus(issue.status)
+  );
   const canMoveLeft = currentIndex > 0;
   const canMoveRight = currentIndex < columns.length - 1;
+  const readOnlyTooltip = isDragDisabled ? "Read-only mode: Cannot modify" : "";
 
   return (
-    <Draggable draggableId={issue.id} index={index}>
+    <Draggable
+      draggableId={issue.id}
+      index={index}
+      isDragDisabled={isDragDisabled}
+    >
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          className={`issue-card${snapshot.isDragging ? " dragging" : ""}`}
-          style={provided.draggableProps.style}
+          {...(!isDragDisabled ? provided.dragHandleProps : {})}
+          className={`issue-card${snapshot.isDragging ? " dragging" : ""}${
+            isDragDisabled ? " disabled" : ""
+          }`}
+          style={{
+            ...provided.draggableProps.style,
+            opacity: isDragDisabled ? 0.6 : 1,
+            cursor: isDragDisabled ? "not-allowed" : "grab",
+          }}
+          title={readOnlyTooltip}
         >
           <Link
             to={`/issue/${issue.id}`}
             className="issue-card-content"
             tabIndex={0}
-            style={{ textDecoration: "none", color: "inherit", flex: 1 }}
+            style={{
+              textDecoration: "none",
+              color: "inherit",
+              flex: 1,
+            }}
           >
             <div className="card-header">
               <div className={`priority-badge priority-${issue.priority}`}>
@@ -69,32 +94,35 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
               </span>
             </div>
           </Link>
-          <div className="card-footer">
-            <div className="card-actions">
-              <button
-                className="move-btn trello-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMove(issue.id, "left");
-                }}
-                disabled={!canMoveLeft}
-                title="Move Left"
-              >
-                <FiArrowLeft />
-              </button>
-              <button
-                className="move-btn trello-btn"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onMove(issue.id, "right");
-                }}
-                disabled={!canMoveRight}
-                title="Move Right"
-              >
-                <FiArrowRight />
-              </button>
+
+          {onMove && (
+            <div className="card-footer">
+              <div className="card-actions">
+                <button
+                  className="move-btn trello-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMove(issue.id, "left");
+                  }}
+                  disabled={!canMoveLeft || isDragDisabled}
+                  title={readOnlyTooltip || "Move Left"}
+                >
+                  <FiArrowLeft />
+                </button>
+                <button
+                  className="move-btn trello-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMove(issue.id, "right");
+                  }}
+                  disabled={!canMoveRight || isDragDisabled}
+                  title={readOnlyTooltip || "Move Right"}
+                >
+                  <FiArrowRight />
+                </button>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </Draggable>
