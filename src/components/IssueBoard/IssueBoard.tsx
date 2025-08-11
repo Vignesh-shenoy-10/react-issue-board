@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import rawIssuesData from "../../data/issues.json";
-import { Issue, IssueStatus, IssuePriority } from "../../types";
+import React, { useRef, useState } from "react";
+import { Issue, IssueStatus } from "../../types";
 import IssueColumn from "../IssueColumn";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { toast, Slide } from "react-toastify";
@@ -8,15 +7,6 @@ import "./IssueBoard.css";
 import { useIssues } from "../../context/IssuesContext";
 
 const columns: IssueStatus[] = ["Backlog", "In Progress", "Done"];
-
-function parseStatus(s: string): IssueStatus {
-  if (columns.includes(s as IssueStatus)) return s as IssueStatus;
-  throw new Error(`Invalid status: ${s}`);
-}
-function parsePriority(p: string): IssuePriority {
-  if (p === "low" || p === "medium" || p === "high") return p;
-  throw new Error(`Invalid priority: ${p}`);
-}
 
 type LastAction = {
   issueId: string;
@@ -26,21 +16,13 @@ type LastAction = {
 };
 
 const IssueBoard: React.FC = () => {
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const { issues, setIssues } = useIssues(); // ⬅ get from context
   const undoTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // local UI state
   const [searchQuery, setSearchQuery] = useState("");
   const [filterAssignee, setFilterAssignee] = useState<string | null>(null);
   const [filterSeverity, setFilterSeverity] = useState<number | null>(null);
-
-  useEffect(() => {
-    const mapped: Issue[] = rawIssuesData.map(issue => ({
-      ...issue,
-      status: parseStatus(issue.status),
-      priority: parsePriority(issue.priority),
-      userDefinedRank: issue.userDefinedRank ?? 0
-    }));
-    setIssues(mapped);
-  }, []);
 
   const undoMoveDirect = (prevIssues: Issue[]) => {
     setIssues(prevIssues);
@@ -86,7 +68,7 @@ const IssueBoard: React.FC = () => {
 
   const moveIssue = (id: string, direction: "left" | "right") => {
     setIssues(prev => {
-      const prevState = prev.map(i => ({ ...i })); 
+      const prevState = prev.map(i => ({ ...i }));
       const issueToMove = prevState.find(i => i.id === id)!;
       const fromStatus = issueToMove.status;
       const newIndex =
@@ -113,6 +95,7 @@ const IssueBoard: React.FC = () => {
       const prevState = prev.map(issue => ({ ...issue }));
       const fromStatus = source.droppableId as IssueStatus;
       const toStatus = destination.droppableId as IssueStatus;
+
       const startCol = prevState.filter(issue => issue.status === fromStatus);
       const finishCol = prevState.filter(issue => issue.status === toStatus && toStatus !== fromStatus);
       const draggedIdx = startCol.findIndex(issue => issue.id === draggableId);
@@ -123,6 +106,7 @@ const IssueBoard: React.FC = () => {
       startCol.splice(draggedIdx, 1);
 
       if (fromStatus === toStatus) {
+        // Same-column reorder
         startCol.splice(destination.index, 0, draggedIssue);
         const newIssues: Issue[] = [];
         for (const issue of prevState) {
@@ -140,6 +124,7 @@ const IssueBoard: React.FC = () => {
         });
         return newIssues;
       } else {
+        // Cross-column move
         draggedIssue.status = toStatus;
         finishCol.splice(destination.index, 0, draggedIssue);
         const newIssues: Issue[] = [];
@@ -163,16 +148,15 @@ const IssueBoard: React.FC = () => {
     });
   };
 
-  const processedIssues = issues
-    .filter(issue => {
-      const q = searchQuery.toLowerCase();
-      const matchesSearch =
-        issue.title.toLowerCase().includes(q) ||
-        (issue.tags || []).some(tag => tag.toLowerCase().includes(q));
-      const matchesAssignee = filterAssignee ? issue.assignee === filterAssignee : true;
-      const matchesSeverity = filterSeverity ? issue.severity === filterSeverity : true;
-      return matchesSearch && matchesAssignee && matchesSeverity;
-    });
+  const processedIssues = issues.filter(issue => {
+    const q = searchQuery.toLowerCase();
+    const matchesSearch =
+      issue.title.toLowerCase().includes(q) ||
+      (issue.tags || []).some(tag => tag.toLowerCase().includes(q));
+    const matchesAssignee = filterAssignee ? issue.assignee === filterAssignee : true;
+    const matchesSeverity = filterSeverity ? issue.severity === filterSeverity : true;
+    return matchesSearch && matchesAssignee && matchesSeverity;
+  });
 
   const backlog = processedIssues.filter(i => i.status === "Backlog");
   const inProgress = processedIssues.filter(i => i.status === "In Progress");
@@ -180,7 +164,7 @@ const IssueBoard: React.FC = () => {
 
   return (
     <>
-
+      {/* Top filters/search */}
       <div className="controls-bar">
         <div className="input-with-icon">
           <span className="input-icon">🔍</span>
@@ -214,12 +198,13 @@ const IssueBoard: React.FC = () => {
           >
             <option value="">All Severities</option>
             <option className="severity-low" value="1">🟢 1 (Low)</option>
-            <option className="severity-medium" value="2">🟡 2(Medium)</option>
+            <option className="severity-medium" value="2">🟡 2 (Medium)</option>
             <option className="severity-high" value="3">🔴 3 (High)</option>
           </select>
         </div>
       </div>
 
+      {/* Kanban board */}
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="board">
           <IssueColumn title="Backlog" status="Backlog" issues={backlog} onMove={moveIssue} />

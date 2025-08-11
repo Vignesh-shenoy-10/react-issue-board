@@ -1,0 +1,42 @@
+.issue-detail-container {
+  max-width: 700px;
+  margin: 20px auto;
+  padding: 24px;
+  background: #fff;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  border-radius: 10px;
+}
+
+.issue-detail-row {
+  margin: 10px 0;
+  font-size: 16px;
+}
+
+.tag-pill {
+  background: #2196f3;
+  color: white;
+  padding: 4px 10px;
+  margin-left: 6px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+}
+
+.mark-resolved-btn {
+  margin-top: 20px;
+  background-color: #4caf50;
+  border: none;
+  padding: 10px 18px;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.mark-resolved-btn:disabled {
+  background-color: #9e9e9e;
+  cursor: not-allowed;
+}
+
+.mark-resolved-btn:hover:not(:disabled) {
+  background-color: #45a049;
+}

@@ -15,6 +15,14 @@
   transform: translateY(-1px);
 }
 
+.issue-card-content:hover,
+.issue-card-content:focus {
+  background: #f0f7ff;
+  cursor: pointer;
+  outline: 2px solid white;
+}
+
+
 .issue-card.dragging {
   background: #fffbe6;
   box-shadow: 0 4px 14px rgba(76, 154, 255, 0.35);

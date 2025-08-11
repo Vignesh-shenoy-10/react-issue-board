@@ -2,6 +2,7 @@
   {
     "id": "1",
     "title": "Fix login bug",
+    "description": "Test",
     "status": "Backlog",
     "priority": "medium",
     "severity": 2,
@@ -13,6 +14,7 @@
   {
     "id": "2",
     "title": "Improve dashboard loading",
+    "description": "Test",
     "status": "In Progress",
     "priority": "low",
     "severity": 1,
@@ -24,6 +26,7 @@
   {
     "id": "3",
     "title": "Add dark mode",
+    "description": "Test",
     "status": "Done",
     "priority": "low",
     "severity": 1,
@@ -35,12 +38,37 @@
    {
     "id": "4",
     "title": "Add User login feature",
+    "description": "Test",
     "status": "In Progress",
     "priority": "high",
     "severity": 3,
     "createdAt": "2025-07-07T09:30:00Z",
     "assignee": "carol",
     "tags": ["ui"],
+    "userDefinedRank": 3
+  },
+   {
+    "id": "5",
+    "title": "Add New user Registration feature",
+    "description": "Need to add new registrations",
+    "status": "In Progress",
+    "priority": "medium",
+    "severity": 2,
+    "createdAt": "2025-07-07T09:30:00Z",
+    "assignee": "alice",
+    "tags": ["auth,ui"],
+    "userDefinedRank": 3
+  },
+   {
+    "id": "6",
+    "title": "Fix content refresh bug",
+    "description": "Content is not getting refreshed properly",
+    "status": "Backlog",
+    "priority": "high",
+    "severity": 3,
+    "createdAt": "2025-07-07T09:30:00Z",
+    "assignee": "bob",
+    "tags": ["bug"],
     "userDefinedRank": 3
   }
 ]

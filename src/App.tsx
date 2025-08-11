@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import BoardPage from './pages/BoardPage';
-import IssueDetailPage from './pages/IssueDetailPage';
+import IssueDetailPage from './pages/IssueDetailPage/IssueDetailPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { Navigation } from './components/Navigation';
 import { ToastContainer } from "react-toastify";

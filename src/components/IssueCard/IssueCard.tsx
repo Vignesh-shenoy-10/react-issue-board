@@ -1,5 +1,6 @@
 import React from "react";
 import { Draggable } from "@hello-pangea/dnd";
+import { Link } from "react-router-dom";
 import { Issue, IssueStatus } from "../../types";
 import { FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import "./IssueCard.css";
@@ -11,6 +12,7 @@ interface IssueCardProps {
 }
 
 const columns: IssueStatus[] = ["Backlog", "In Progress", "Done"];
+
 const getInitials = (name: string) => name?.charAt(0).toUpperCase() || "?";
 
 const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
@@ -28,42 +30,49 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
           className={`issue-card${snapshot.isDragging ? " dragging" : ""}`}
           style={provided.draggableProps.style}
         >
-          <div className="card-header">
-            <div className={`priority-badge priority-${issue.priority}`}>
-              {issue.priority}
+          <Link
+            to={`/issue/${issue.id}`}
+            className="issue-card-content"
+            tabIndex={0}
+            // Prevents focus on the button inside breaking the card link
+            style={{ textDecoration: "none", color: "inherit", flex: 1 }}
+          >
+            <div className="card-header">
+              <div className={`priority-badge priority-${issue.priority}`}>
+                {issue.priority}
+              </div>
             </div>
-          </div>
+            <div className="issue-title">{issue.title}</div>
 
-          <div className="issue-title">{issue.title}</div>
+            {issue.tags?.length > 0 && (
+              <div className="tag-list">
+                {issue.tags.map(tag => (
+                  <span key={tag} className={`tag-pill tag-${tag.toLowerCase()}`}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
 
-          {issue.tags?.length > 0 && (
-            <div className="tag-list">
-              {issue.tags.map((tag) => (
-                <span key={tag} className={`tag-pill tag-${tag.toLowerCase()}`}>
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-
-          <div className="issue-meta">
-            <div className="assignee-group" title={issue.assignee}>
-              <span className="assignee-avatar">
-                {getInitials(issue.assignee)}
+            <div className="issue-meta">
+              <div className="assignee-group" title={issue.assignee}>
+                <span className="assignee-avatar">{getInitials(issue.assignee)}</span>
+                <span className="assignee-name">{issue.assignee}</span>
+              </div>
+              <span className="meta-label">Severity: {issue.severity}</span>
+              <span className="meta-label">
+                {new Date(issue.createdAt).toLocaleDateString()}
               </span>
-              <span className="assignee-name">{issue.assignee}</span>
             </div>
-            <span className="meta-label">Severity: {issue.severity}</span>
-            <span className="meta-label">
-              {new Date(issue.createdAt).toLocaleDateString()}
-            </span>
-          </div>
-
+          </Link>
           <div className="card-footer">
             <div className="card-actions">
               <button
                 className="move-btn trello-btn"
-                onClick={() => onMove(issue.id, "left")}
+                onClick={e => {
+                  e.stopPropagation();
+                  onMove(issue.id, "left");
+                }}
                 disabled={!canMoveLeft}
                 title="Move Left"
               >
@@ -71,7 +80,10 @@ const IssueCard: React.FC<IssueCardProps> = ({ issue, index, onMove }) => {
               </button>
               <button
                 className="move-btn trello-btn"
-                onClick={() => onMove(issue.id, "right")}
+                onClick={e => {
+                  e.stopPropagation();
+                  onMove(issue.id, "right");
+                }}
                 disabled={!canMoveRight}
                 title="Move Right"
               >
