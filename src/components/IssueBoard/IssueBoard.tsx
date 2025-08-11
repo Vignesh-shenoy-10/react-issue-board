@@ -90,7 +90,7 @@ const IssueBoard: React.FC = () => {
     triggerUndoToast(action);
   };
 
-  /** ---------- ARROW MOVE ---------- */
+
   const moveIssue = (id: string, direction: "left" | "right") => {
     if (!isAdmin) return;
 
@@ -123,7 +123,7 @@ const IssueBoard: React.FC = () => {
     });
   };
 
-  /** ---------- DRAG/DROP MOVE ---------- */
+ 
   const onDragEnd = (result: DropResult) => {
     if (!isAdmin) return;
     const { source, destination, draggableId } = result;
@@ -183,7 +183,7 @@ const IssueBoard: React.FC = () => {
     });
   };
 
-  /** ---------- FILTERING ---------- */
+
   const processedIssues = issues.filter((issue) => {
     const q = searchQuery.toLowerCase();
     const matchesSearch =
